@@ -1,0 +1,15 @@
+# Auto-generated project tcl file to read all sources
+
+{% if incdirs -%}
+set search_path [list {{ incdirs|join(' ') }}]
+{%- endif %}
+
+{%if indirect_source == "true" -%}
+{% for ids_command in ids_commands %}
+{{ids_command}}
+{% endfor %}
+{% else %}
+{% for src_file in src_files if src_file|src_file_filter%}
+{{ src_file|src_file_filter }}
+{% endfor %}
+{%- endif %}
