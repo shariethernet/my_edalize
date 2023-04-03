@@ -95,13 +95,15 @@ class Sandpipersaas(Edatool):
                 )
             )
             f.write(
-                "OUTPUTFILE :=  {}\n".format((self.tool_options.get("output_file", "")))
+                "OUTPUTFILE :=  {}\n".format(
+                    " ".join(self.tool_options.get("output_file", ""))
+                )
             )
             f.write("INPUTFILE := {}\n".format((self.files[0].get("name"))))
             if self.tool_options.get("output_dir", " ") != " ":
                 f.write(
                     "OUTPUTDIR :=  --outdir {}\n".format(
-                        (self.tool_options.get("output_dir", " "))
+                        " ".join(self.tool_options.get("output_dir", " "))
                     )
                 )
             else:
