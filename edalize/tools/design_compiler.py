@@ -124,7 +124,7 @@ class Design_compiler(Edatool):
 
         _s = "{} has unknown file type '{}', interpretation is up to Design Compiler"
         logger.warning(_s.format(f.name, f.file_type))
-        return "add_files -norecurse" + " " + f.name
+        # return "add_files -norecurse" + " " + f.name
 
     ids_commands = []
 
@@ -195,6 +195,7 @@ class Design_compiler(Edatool):
         logger.warning(f"filepaths {file_path}")
         _s = self.tool_options.get("rtl_in_name")
         logger.warning(f"RTL_in name {_s}")
+        logger.warning(f"self.files is {self.files}")
 
     def setup(self, edam):
         super().setup(edam)

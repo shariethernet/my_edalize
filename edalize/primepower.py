@@ -93,6 +93,7 @@ class Primepower(Edatool):
         for file in self.files:
             if file.get("file_type") == "vcd":
                 vcdname = file.get("name")
+                logger.warning("vcd name", vcdname)
             if file.get("file_type") == "verilogSource":
                 netlistpath = file.get("name")
 

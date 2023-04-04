@@ -1,0 +1,95 @@
+############################################
+#
+# Auto-generated project tcl file:
+#  * sets up variable
+#  * runs customized script
+#
+############################################
+sh date
+
+{% if mode -%}
+set power_analysis_mode {{ mode }}
+{% else %}
+set power_analysis_mode averaged
+{%- endif %}
+
+{%if mode == "time_based" %}
+write_activity_waveforms -vcd {{vcdpath}} -output wvfrm_activity.out \
+ -interval 5 -peak_window 30 -hierarchical_levels 2
+report_activity_waveforms
+{%- endif %}
+
+{% if toplevel -%}
+set TOP_MODULE {{ toplevel }}
+{%- endif %}
+
+{% if pp_script -%}
+set PP_SCRIPT {{ pp_script }}
+{% else %}
+set PP_SCRIPT pp_script.tcl
+{%- endif %}
+
+set PRWD [pwd]
+{% if script_dir -%}
+set SCRIPT_DIR {{ script_dir }}
+{% else %}
+set SCRIPT_DIR "./"
+{% endif %}
+
+{% if report_dir -%}
+set REPORT_DIR {{ report_dir }}
+sh mkdir -p ${REPORT_DIR}
+{% else %}
+set REPORT_DIR "./"
+{%- endif %}
+
+{% if lib_dir -%}
+set lib_dir {{ lib_dir }}
+{%- endif %}
+
+{% if target_library -%}
+set target_library {{ target_library }}
+{%- endif %}
+
+set search_path "{{ lib_dir }} \
+                 {{verilog_dir}} "
+
+{% if libs -%}
+set link_path   [concat "*"  {{ libs }}]
+{%- endif %}
+
+{% if vcdpath -%}
+set VCD_FILE {{vcdpath}}
+{% else %}
+set VCD_FILE wave_dump.vcd
+{%- endif %}
+
+set_app_var power_enable_rtl_analysis true
+{% if incdirs -%}
+set search_path [list {{ incdirs|join(' ') }}]
+{%- endif %}
+
+{% if netlistpath -%}
+read_verilog {{ netlistpath }}
+current_design ${TOP_MODULE}
+link_design
+{%- endif %}
+
+read_sdc {{sdc_path}}
+read_parasitics {{spef_path}}
+read_sdf {{sdf_path}}
+read_vcd {% if vcd_strip_path -%} -strip_path {%- endif %} {{ vcd_strip_path }} ${VCD_FILE} 
+############################################
+#
+# Run custom script
+#
+############################################
+
+source "${SCRIPT_DIR}/${PP_SCRIPT}"
+
+############################################
+#
+#  all done -- exit
+#
+############################################
+sh date
