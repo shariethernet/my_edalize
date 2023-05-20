@@ -9,4 +9,4 @@ REPORT_DIR := "./"
 
 all:
 			mkdir -p ${REPORT_DIR}
-			pwr_shell -f ${NAME}.tcl |& tee ${REPORT_DIR}/pp.log
+			pt_shell -f ${NAME}.tcl |& tee ${REPORT_DIR}/pp.log
