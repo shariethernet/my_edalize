@@ -90,13 +90,15 @@ class Primepower(Edatool):
         # self.pp_tool = self.tool_options.get("pp", "primewpower")
         vcdname = ""
         netlistpath = ""
+        logger.info("All Files", self.files)
         for file in self.files:
             if file.get("file_type") == "vcd":
                 vcdname = file.get("name")
-                logger.warning("vcd name", vcdname)
+                logger.info("vcd name: %s", vcdname)
             if file.get("file_type") == "verilogSource":
                 netlistpath = file.get("name")
-
+                logger.info("netlist path: %s", netlistpath)
+        logger.info("Here")
         template_vars = {
             "name": self.name,
             "src_files": src_files,
@@ -151,8 +153,9 @@ class Primepower(Edatool):
             "spef": "read_parasitics",
             "vcd": "read_vcd",
         }
-
+        logger.info("Above :%s", f.file_type)
         _file_type = f.file_type.split("-")[0]
+        logger.info("_file_type %s", _file_type)
         if _file_type in file_types:
             cmd = ""
 
@@ -167,23 +170,29 @@ class Primepower(Edatool):
                     + f.name
                 )
                 return cmd
-            elif _file_type == "verilogSource":
-                pass
-            else:
+            elif _file_type == "sdc":
                 cmd += file_types[_file_type] + " " + f.name
-                return cmd
+            elif _file_type == "spef":
+                cmd += file_types[_file_type] + " " + f.name
+            elif _file_type == "sdf":
+                cmd += file_types[_file_type] + " " + f.name
+            else:
+                pass
+                # cmd += file_types[_file_type] + " " + f.name
+            logger.info("cmd :%s", cmd)
+            return cmd
 
         if _file_type == "user":
             return ""
 
-        _s = "{} has unknown file type '{}', interpretation is up to Prime Power Compiler"
+        _s = "{} has unknown file type '{}', interpretation is up to Prime Power Compiler in edalize"
         logger.warning(_s.format(f.name, f.file_type))
         # return "add_files -norecurse" + " " + f.name
 
     def build_main(self):
         logger.info("Building")
         logger.info(
-            "(running make, which runs pwr_shell which has an unbelievably long lag before printing. be patient)"
+            "(running make, which runs pt_shell which has an unbelievably long lag before printing. be patient)"
         )
         logger.info((self.tool_options.get("pp_script_dir")))
         args = []

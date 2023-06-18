@@ -37,14 +37,6 @@ class Design_compiler(Edatool):
             "type": "str",
             "desc": "Number of jobs. Useful for parallelizing syntheses.",
         },
-        "indirect_source": {
-            "type": "str",
-            "desc": "set to true (in quotes) when the search path for the RTL is not in the .core, but output from a previous tool ",
-        },
-        "rtl_in_name": {
-            "type": "str",
-            "desc": "Name of the generated RTL to be synthesized",
-        },
     }
 
     # To get the same data structure for generated src files to dc
@@ -208,17 +200,8 @@ class Design_compiler(Edatool):
             return opt
         """
         self.jinja_env.filters["src_file_filter"] = self.src_file_filter
-        if self.tool_options.get("indirect_source") != "true":
-            (src_files, incdirs) = self._get_fileset_files(force_slash=True)
 
-        else:
-            src_files = []
-            incdirs = []
-            paths = [os.path.join(self.work_root)]
-            # force_files = [self.tool_options.get("output_file")]
-            self.get_rtl_files(paths)
-            logger.warning("indir_source is true")
-            logger.warning(f"ids_commands {self.ids_commands}")
+        (src_files, incdirs) = self._get_fileset_files(force_slash=True)
 
         self.synth_tool = self.tool_options.get("synth", "design-compiler")
 
@@ -233,8 +216,6 @@ class Design_compiler(Edatool):
             "target_library": self.tool_options.get("target_library"),
             "libs": (self.tool_options.get("libs")),
             "toplevel": self.toplevel,
-            "indirect_source": (self.tool_options.get("indirect_source", "")),
-            "ids_commands": self.ids_commands,
         }
 
         design_compiler_settings = self.tool_options.get(
@@ -263,7 +244,13 @@ class Design_compiler(Edatool):
         read_tcl = self.name + "-read-sources.tcl"
         synth_tcl = self.name + ".tcl"
 
-        dc_tcl_scripts = [read_tcl, synth_tcl]
+        source_files = [
+            i.name for i in src_files if i.name.endswith(".v") or i.name.endswith(".sv")
+        ]
+        print("Source_files", source_files)
+        source_files_depends = " ".join(source_files)
+
+        dc_tcl_scripts = [read_tcl, synth_tcl, source_files_depends]
 
         self.report_dir_path = "".join(self.tool_options.get("report_dir", ["./"]))
 

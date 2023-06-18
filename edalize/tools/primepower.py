@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Primepower(Edatool):
 
-    description = "The Primepower backend executes Synopsys Primepower for averaged and dynamic power analysis"
+    description = "The Primepower backend executes Synopsys Primepower for performing averaged and dynamic power analysis"
 
     TOOL_OPTIONS = {
         "pp_script_dir": {
@@ -37,7 +37,7 @@ class Primepower(Edatool):
             "type": "str",
             "desc": "Number of jobs. Useful for parallelizing syntheses.",
         },
-        "indirect_source": {
+        "indir_source": {
             "type": "str",
             "desc": "set to true (in quotes) when the search path for the RTL is not in the .core, but output from a previous tool ",
         },
@@ -213,7 +213,7 @@ class Primepower(Edatool):
         if _file_type == "user":
             return ""
 
-        _s = "{} has unknown file type '{}', interpretation is up to Prime Power Compiler"
+        _s = "{} has unknown file type '{}', interpretation is up to PrimePower Compiler in tools"
         logger.warning(_s.format(f.name, f.file_type))
 
     ids_commands = []
@@ -379,7 +379,7 @@ class Primepower(Edatool):
         ]
         commands.add(
             [
-                "pwr_shell -f",
+                "pt_shell -f",
                 self.name + "_pp.tcl",
                 "|& tee",
                 self.report_dir_path + "/pp.log",

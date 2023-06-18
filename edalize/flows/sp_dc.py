@@ -50,8 +50,10 @@ class Sp_dc(Edaflow):
     def configure_tools(self, nodes):
         super().configure_tools(nodes)
         name = self.edam["name"]
-        self.commands.add([], ["combine"], ["tlv2v", "synth"])
-        self.commands.set_default_target("combine")
+        print(self.edam)
+        # self.commands.add([], ["combine"], ["tlv2v", "synth"])
+        # self.commands.set_default_target("combine")
+        self.commands.set_default_target("synth")
 
     # def build(self):
     #     logger.info("Test")

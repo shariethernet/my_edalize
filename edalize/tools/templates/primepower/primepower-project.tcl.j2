@@ -78,7 +78,7 @@ link_design
 read_sdc {{sdc_path}}
 read_parasitics {{spef_path}}
 read_sdf {{sdf_path}}
-#read_vcd {% if vcd_strip_path -%} -strip_path {%- endif %} {{ vcd_strip_path }} ${VCD_FILE} 
+read_vcd {% if vcd_strip_path -%} -strip_path {%- endif %} {{ vcd_strip_path }} ${VCD_FILE} 
 ############################################
 #
 # Run custom script
