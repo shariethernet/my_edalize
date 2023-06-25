@@ -6,18 +6,6 @@
 #
 ############################################
 sh date
-set_app_var power_enable_rtl_analysis true
-{% if mode -%}
-set power_analysis_mode {{ mode }}
-{% else %}
-set power_analysis_mode averaged
-{%- endif %}
-
-{%if mode == "time_based" %}
-write_activity_waveforms -vcd {{vcdpath}} -output wvfrm_activity.out \
- -interval 5 -peak_window 30 -hierarchical_levels 2
-report_activity_waveforms
-{%- endif %}
 
 {% if toplevel -%}
 set TOP_MODULE {{ toplevel }}
@@ -26,7 +14,7 @@ set TOP_MODULE {{ toplevel }}
 {% if pp_script -%}
 set PP_SCRIPT {{ pp_script }}
 {% else %}
-set PP_SCRIPT pp_script.tcl
+set PP_SCRIPT pt_script.tcl
 {%- endif %}
 
 set PRWD [pwd]
@@ -51,21 +39,15 @@ set lib_dir {{ lib_dir }}
 set target_library {{ target_library }}
 {%- endif %}
 
-set search_path "{{ lib_dir }} \
+{% if incdirs -%}
+set search_path [list "." "{{ lib_dir }}" "{{ verilog_dir }}" {{ incdirs|join(' ') }}]
+{% else %}
+set_app_var search_path ". {{ lib_dir }} \
                  {{verilog_dir}} "
+{%- endif %}
 
 {% if libs -%}
-set link_path   [concat "*"  {{ libs }}]
-{%- endif %}
-
-{% if vcdpath -%}
-set VCD_FILE {{vcdpath}}
-{% else %}
-set VCD_FILE wave_dump.vcd
-{%- endif %}
-
-{% if incdirs -%}
-set search_path [list {{ incdirs|join(' ') }}]
+set_app_var link_path [concat "*"  {{ libs }}]
 {%- endif %}
 
 {% if netlistpath -%}
@@ -78,10 +60,6 @@ link_design
 {{ src_file|src_file_filter }}
 {% endfor %}
 
-#read_sdc {{sdc_path}}
-#read_parasitics {{spef_path}}
-#read_sdf {{sdf_path}}
-#read_vcd {% if vcd_strip_path -%} -strip_path {%- endif %} {{ vcd_strip_path }} ${VCD_FILE} 
 ############################################
 #
 # Run custom script
@@ -90,9 +68,18 @@ link_design
 
 source "${SCRIPT_DIR}/${PP_SCRIPT}"
 
+# This section is used to run a python script , alternative to using fusesoc hooks
+{% if postbuildpy -%}
+set pythonScriptPath {{ postbuildpy }}
+set pythonScriptName [file tail $pythonScriptPath]
+file copy $pythonScriptPath [file join [file dirname [info script]] $pythonScriptName]
+exec python3 [file join [file dirname [info script]] $pythonScriptName]
+{%- endif %}
+
 ############################################
 #
 #  all done -- exit
 #
 ############################################
 sh date
+exit
