@@ -198,6 +198,7 @@ class Primepower(Edatool):
                     + " "
                     + self.tool_options.get("vcd_strip_path", None)
                     + " "
+                    # + "-time {4990 5730} "
                     + f.name
                 )
                 return cmd
@@ -308,6 +309,7 @@ class Primepower(Edatool):
         self.synth_tool = self.tool_options.get("synth", "design-compiler")
 
         vcdpath = ""
+        netlistpath = ""
         for file in self.files:
             if file.get("file_type") == "vcd":
                 vcdpath = file.get("name")
@@ -316,6 +318,7 @@ class Primepower(Edatool):
                 os.path.relpath(self.tool_options.get("netlistpath", "")),
                 self.tool_options.get("netlistname", "") + ".v",
             )
+            print("netlist path:", netlistpath)
             sdc_path = os.path.join(
                 self.tool_options.get("netlistpath", ""),
                 self.tool_options.get("netlistname", "") + ".sdc",

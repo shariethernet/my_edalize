@@ -13,11 +13,11 @@ set power_analysis_mode {{ mode }}
 set power_analysis_mode averaged
 {%- endif %}
 
-{%if mode == "time_based" %}
-write_activity_waveforms -vcd {{vcdpath}} -output wvfrm_activity.out \
- -interval 5 -peak_window 30 -hierarchical_levels 2
-report_activity_waveforms
-{%- endif %}
+# {%if mode == "time_based" %}
+# write_activity_waveforms -vcd {{vcdpath}} -output wvfrm_activity.out \
+#  -interval 5 -peak_window 30 -hierarchical_levels 2
+# report_activity_waveforms
+# {%- endif %}
 
 {% if toplevel -%}
 set TOP_MODULE {{ toplevel }}
@@ -96,3 +96,4 @@ source "${SCRIPT_DIR}/${PP_SCRIPT}"
 #
 ############################################
 sh date
+exit
