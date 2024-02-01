@@ -262,7 +262,7 @@ class Ptpx(Edatool):
 
         self.report_dir_path = "".join(self.tool_options.get("report_dir", ["./"]))
         self.edam = edam.copy()
-        print("EDAM here:", self.edam)
+        # print("EDAM here:", self.edam)
         for k, v in self.edam.items():
             if k == "files":
                 for f in v:
@@ -270,7 +270,7 @@ class Ptpx(Edatool):
                         self.edam["files"].remove(f)
 
         self.edam["files"].append({"name": "post_sta_max_freq.sdc", "file_type": "sdc"})
-        print("EDAM after:", self.edam)
+        # print("EDAM after:", self.edam)
         # Write makefile
         commands = EdaCommands()
         # commands.add(["mkdir -p", self.report_dir_path + ""], ["dircreate"], "")

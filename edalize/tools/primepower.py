@@ -170,7 +170,7 @@ class Primepower(Edatool):
                 file_type = f.get("file_type", "")
                 logical_name = f.get("logical_name", "")
                 src_files.append(File(_name, file_type, logical_name))
-        print("Src Files: ", [i.file_type for i in src_files])
+        # print("Src Files: ", [i.file_type for i in src_files])
         return (src_files, incdirs)
 
     def src_file_filter(self, f):
