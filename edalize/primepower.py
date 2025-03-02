@@ -89,12 +89,16 @@ class Primepower(Edatool):
 
         # self.pp_tool = self.tool_options.get("pp", "primewpower")
         vcdname = ""
+        fsdbname = ""
         netlistpath = ""
         logger.info("All Files", self.files)
         for file in self.files:
             if file.get("file_type") == "vcd":
                 vcdname = file.get("name")
                 logger.info("vcd name: %s", vcdname)
+            if file.get("file_type") == "fsdb":
+                fsdbname = file.get("name")
+                logger.info("fsdb name: %s", fsdbname)
             if file.get("file_type") == "verilogSource":
                 netlistpath = file.get("name")
                 logger.info("netlist path: %s", netlistpath)
@@ -152,6 +156,7 @@ class Primepower(Edatool):
             "sdf": "read_sdf",
             "spef": "read_parasitics",
             "vcd": "read_vcd",
+            "fsdb": "read_fsdb",
         }
         logger.info("Above :%s", f.file_type)
         _file_type = f.file_type.split("-")[0]
@@ -160,6 +165,17 @@ class Primepower(Edatool):
             cmd = ""
 
             if _file_type == "vcd":
+                cmd += (
+                    file_types[_file_type]
+                    + " "
+                    + "-strip_path"
+                    + " "
+                    + self.tool_options.get("vcd_strip_path", None)
+                    + " "
+                    + f.name
+                )
+                return cmd
+            elif _file_type == "fsdb":
                 cmd += (
                     file_types[_file_type]
                     + " "

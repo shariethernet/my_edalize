@@ -112,6 +112,10 @@ class Primepower(Edatool):
                         fname = file
                         ftype = "vcd"
                         src_files.append(File(fname, ftype, fname))
+                    elif file.endswith(".fsdb"):
+                        fname = file
+                        ftype = "fsdb"
+                        src_files.append(File(fname, ftype, fname))
                     else:
                         pass
             elif os.path.isfile(path):
@@ -142,6 +146,10 @@ class Primepower(Edatool):
                 elif file.endswith(".vcd"):
                     fname = file
                     ftype = "vcd"
+                    src_files.append(File(fname, ftype, fname))
+                elif file.endswith(".fsdb"):
+                    fname = file
+                    ftype = "fsdb"
                     src_files.append(File(fname, ftype, fname))
                 else:
                     pass
@@ -184,6 +192,7 @@ class Primepower(Edatool):
             "sdf": "read_sdf",
             "spef": "read_parasitics",
             "vcd": "read_vcd",
+            "fsdb": "read_fsdb",
         }
 
         _file_type = f.file_type.split("-")[0]
@@ -191,6 +200,18 @@ class Primepower(Edatool):
             cmd = ""
 
             if _file_type == "vcd":
+                cmd += (
+                    file_types[_file_type]
+                    + " "
+                    + "-strip_path"
+                    + " "
+                    + self.tool_options.get("vcd_strip_path", None)
+                    + " "
+                    # + "-time {4990 5730} "
+                    + f.name
+                )
+                return cmd
+            elif _file_type == "fsdb":
                 cmd += (
                     file_types[_file_type]
                     + " "
@@ -393,6 +414,9 @@ class Primepower(Edatool):
         ]
         commands.add(
             [
+                "mkdir -p",
+                self.report_dir_path,
+                "&&",
                 "pwr_shell -f",
                 self.name + "_pp.tcl",
                 "|& tee",

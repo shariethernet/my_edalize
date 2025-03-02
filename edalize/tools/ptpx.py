@@ -282,6 +282,9 @@ class Ptpx(Edatool):
         # commands.add([],[".PHONY"],["dircreate"])
         commands.add(
             [
+                "mkdir -p",
+                self.report_dir_path,
+                "&&",
                 "pt_shell -f",
                 self.name + "_pt.tcl",
                 "|& tee",
