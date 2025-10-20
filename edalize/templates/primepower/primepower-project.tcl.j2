@@ -62,7 +62,7 @@ set link_path   [concat "*"  {{ libs }}]
 {% if vcdpath -%}
 set VCD_FILE {{vcdpath}}
 {% else %}
-set VCD_FILE wave_dump.vcd
+set VCD_FILE ""
 {%- endif %}
 
 set_app_var power_enable_rtl_analysis true

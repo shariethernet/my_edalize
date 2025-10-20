@@ -61,7 +61,7 @@ set link_path   [concat "*"  {{ libs }}]
 {% if vcdpath -%}
 set VCD_FILE {{vcdpath}}
 {% else %}
-set VCD_FILE wave_dump.vcd
+set VCD_FILE ""
 {%- endif %}
 
 {% if incdirs -%}
