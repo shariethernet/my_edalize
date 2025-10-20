@@ -116,6 +116,10 @@ class Primepower(Edatool):
                         fname = file
                         ftype = "fsdb"
                         src_files.append(File(fname, ftype, fname))
+                    elif file.endswith(".saif"):
+                        fname = file
+                        ftype = "saif"
+                        src_files.append(File(fname, ftype, fname))
                     else:
                         pass
             elif os.path.isfile(path):
@@ -150,6 +154,10 @@ class Primepower(Edatool):
                 elif file.endswith(".fsdb"):
                     fname = file
                     ftype = "fsdb"
+                    src_files.append(File(fname, ftype, fname))
+                elif file.endswith(".saif"):
+                    fname = file
+                    ftype = "saif"
                     src_files.append(File(fname, ftype, fname))
                 else:
                     pass
@@ -193,6 +201,7 @@ class Primepower(Edatool):
             "spef": "read_parasitics",
             "vcd": "read_vcd",
             "fsdb": "read_fsdb",
+            "saif": "read_saif",
         }
 
         _file_type = f.file_type.split("-")[0]
@@ -208,6 +217,17 @@ class Primepower(Edatool):
                     + self.tool_options.get("vcd_strip_path", None)
                     + " "
                     # + "-time {4990 5730} "
+                    + f.name
+                )
+                return cmd
+            elif _file_type == "saif":
+                cmd += (
+                    file_types[_file_type]
+                    + " "
+                    + "-strip_path"
+                    + " "
+                    + self.tool_options.get("vcd_strip_path", None)
+                    + " "
                     + f.name
                 )
                 return cmd
@@ -265,6 +285,7 @@ class Primepower(Edatool):
             "sdf": "read_sdf",
             "spef": "read_parasitics",
             "vcd": "read_vcd",
+            "saif": "read_saif",
         }
 
         file_path = []
